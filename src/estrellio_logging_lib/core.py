@@ -36,6 +36,15 @@ def _coerce_formatter(formatter: logging.Formatter | str | None) -> logging.Form
     return logging.Formatter(formatter)
 
 
+def _resolve_handler_level(
+    default_level: int,
+    override_level: int | str | None,
+) -> int:
+    if override_level is None:
+        return default_level
+    return normalize_level(override_level)
+
+
 def _clear_managed_handlers(logger: logging.Logger) -> None:
     for handler in list(logger.handlers):
         if getattr(handler, _MANAGED_HANDLER_FLAG, False):
@@ -52,6 +61,8 @@ def init_logger(
     name: str,
     *,
     level: int | str = logging.WARNING,
+    file_level: int | str | None = None,
+    stream_level: int | str | None = None,
     log_file_path: str | Path | None = None,
     log_to_file: bool = True,
     stream: bool = True,
@@ -65,15 +76,22 @@ def init_logger(
 
     resolved_level = normalize_level(level)
     resolved_formatter = _coerce_formatter(formatter)
+    resolved_stream_level = _resolve_handler_level(resolved_level, stream_level)
+    resolved_file_level = _resolve_handler_level(resolved_level, file_level)
+    active_levels: list[int] = []
+    if stream:
+        active_levels.append(resolved_stream_level)
+    if log_to_file and log_file_path is not None:
+        active_levels.append(resolved_file_level)
 
     logger = logging.getLogger(name)
-    logger.setLevel(resolved_level)
+    logger.setLevel(min(active_levels, default=resolved_level))
     logger.propagate = False
     _clear_managed_handlers(logger)
 
     if stream:
         stream_handler = _mark_managed(logging.StreamHandler(stream_target or sys.stderr))
-        stream_handler.setLevel(resolved_level)
+        stream_handler.setLevel(resolved_stream_level)
         stream_handler.setFormatter(resolved_formatter)
         logger.addHandler(stream_handler)
 
@@ -83,7 +101,7 @@ def init_logger(
         file_handler = _mark_managed(
             logging.FileHandler(file_path, encoding="utf-8")
         )
-        file_handler.setLevel(resolved_level)
+        file_handler.setLevel(resolved_file_level)
         file_handler.setFormatter(resolved_formatter)
         logger.addHandler(file_handler)
 

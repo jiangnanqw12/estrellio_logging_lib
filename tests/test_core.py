@@ -32,6 +32,40 @@ def test_init_logger_filters_below_threshold(tmp_path) -> None:
     assert "visible warning" in log_value
 
 
+def test_init_logger_file_level_overrides_global_threshold(tmp_path) -> None:
+    stream = io.StringIO()
+    log_file = tmp_path / "logs" / "tool.log"
+    logger = init_logger(
+        "tests.file-override",
+        level=logging.WARNING,
+        file_level=logging.DEBUG,
+        log_file_path=log_file,
+        stream_target=stream,
+    )
+
+    logger.debug("file only debug")
+
+    assert "file only debug" not in stream.getvalue()
+    assert "file only debug" in log_file.read_text(encoding="utf-8")
+
+
+def test_init_logger_stream_level_overrides_global_threshold(tmp_path) -> None:
+    stream = io.StringIO()
+    log_file = tmp_path / "logs" / "tool.log"
+    logger = init_logger(
+        "tests.stream-override",
+        level=logging.WARNING,
+        stream_level=logging.DEBUG,
+        log_file_path=log_file,
+        stream_target=stream,
+    )
+
+    logger.debug("stream only debug")
+
+    assert "stream only debug" in stream.getvalue()
+    assert "stream only debug" not in log_file.read_text(encoding="utf-8")
+
+
 def test_init_logger_is_idempotent_for_managed_handlers(tmp_path) -> None:
     stream = io.StringIO()
     log_file = tmp_path / "tool.log"
