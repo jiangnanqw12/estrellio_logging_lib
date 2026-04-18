@@ -1,29 +1,33 @@
-# Logging Library
+# estrellio_logging_lib
 
-This Python library provides a customizable logging setup that can be integrated into Python applications to manage both console and file logging with configurable verbosity levels.
+Small logging helpers for CLI-style Python tools.
 
-## Features
+## Install
 
-- **Flexible Logging**: Supports both console and file logging with independent or uniform verbosity levels.
-- **Configurable Logging Levels**: Set individual logging levels for the console and file handlers, or apply a uniform level across both.
-- **Conditional File Logging**: Option to enable or disable file logging based on runtime configuration.
-- **Future-Proof Flags**: Reserved flags for potential future features related to plotting and saving output.
-
-## Configuration Parameters
-
-- `log_to_file` (bool): Enable logging to a file. Defaults to `True`.
-- `show_plots` (bool): Reserved for future plotting functionalities. Defaults to `True`.
-- `img_to_file` (bool): Reserved for future functionalities where images might be saved. Defaults to `False`.
-- `uniform_logging_level` (bool): When set to `True`, applies a uniform logging level across all handlers. Defaults to `True`.
-- `desired_level` (logging level): Specifies the logging level to apply when `uniform_logging_level` is `True`. Defaults to `logging.DEBUG`.
-- `logger_level` (logging level): Default logging level for the logger. Defaults to `logging.DEBUG`.
-- `ch_level` (logging level): Logging level for the console handler. Defaults to `logging.INFO`.
-- `fh_level` (logging level): Logging level for the file handler. Defaults to `logging.DEBUG`.
-- `log_file_name` (str): Name of the log file. Defaults to `"logfile.log"`.
+```bash
+pip install -e .
+```
 
 ## Usage
 
-Import and instantiate `MyLogger` to integrate logging into your Python application. Adjust the initialization parameters as needed to configure the logging behavior.
+```python
+import logging
 
-## todo
-add setup.py 
+from estrellio_logging_lib import init_logger
+
+logger = init_logger(
+    "demo.tool",
+    level=logging.WARNING,
+    log_file_path="logs/demo.log",
+)
+
+logger.info("hidden by default")
+logger.warning("visible in stream and log file")
+```
+
+## Behavior
+
+- Default threshold is `WARNING`
+- Stream and file handlers use the same threshold by default
+- File logging is optional via `log_file_path=None` or `log_to_file=False`
+- Repeated initialization does not duplicate handlers managed by the library
