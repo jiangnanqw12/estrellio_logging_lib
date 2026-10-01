@@ -1,8 +1,27 @@
 # estrellio_logging_lib
 
-Standalone C/C++ logging libraries, with a copyable Python standard-library
-logging example. Python 3.10+ users do not need to install this repository
-to use the example.
+Logging helpers for Python CLI tools and standalone C/C++ logging libraries.
+Python 3.10+ users can install the package or copy the standard-library example.
+
+## Python package
+
+```console
+python -m pip install estrellio-logging-lib
+```
+
+```python
+from estrellio_logging_lib import init_logger
+
+logger = init_logger("demo.tool", file_level="DEBUG", log_file_path="logs/demo.log")
+logger.debug("file only")
+logger.warning("terminal and file")
+```
+
+The package provides `init_logger`, `normalize_level`, and `DEFAULT_FORMAT`.
+It supports separate output levels, optional file and stream handlers, and
+custom formatters. Repeated initialization replaces only its own handlers.
+There are no third-party runtime dependencies or native compilation steps.
+For local package development, use `python -m pip install -e ".[dev]"`.
 
 ## Python example
 
@@ -101,18 +120,6 @@ int main() {
 }
 ```
 
-## Existing Python package compatibility
-
-The package under `src/estrellio_logging_lib`, its packaging configuration,
-and its public API remain available for existing consumers such as
-AutoScripts. Those consumers can continue using `python -m pip install -e .`
-and `from estrellio_logging_lib import init_logger`.
-
-New Python integrations should use the standalone example above. The example
-and compatibility package have separate roles and are not guaranteed to gain
-matching APIs or features. The example intentionally exposes a smaller API;
-it is not a drop-in replacement for every compatibility-package option.
-
 ## Tests and further usage
 
 Run Python tests with a Python environment containing pytest:
@@ -123,3 +130,5 @@ python -m pytest -q tests
 
 The tests cover both the existing package and the standalone example. See the
 [usage manual](docs/EstrellioLogger%20Usage%20Manual.md) for integration details.
+
+See [Publishing](docs/publishing.md) for release validation and Trusted Publishing setup.

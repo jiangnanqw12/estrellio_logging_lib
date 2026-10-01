@@ -1,8 +1,8 @@
 # estrellio_logging_lib Usage Manual
 
 This repository maintains C/C++ logging libraries and provides a standalone
-Python logging example. The existing installable Python package is retained
-for compatibility with current consumers.
+Python logging example. Python users can install the maintained package or
+copy the example into their own application.
 
 ## Python: run or copy the example
 
@@ -58,13 +58,13 @@ if __name__ == "__main__":
 - Importing the file performs no logging initialization or filesystem writes.
 
 The example is an application configuration starting point, not a logging
-framework. Adapt it locally; no synchronization with the compatibility
+framework. Adapt it locally; no synchronization with the installed
 package is required or promised.
 
-## Existing Python package
+## Installable Python package
 
-Existing projects may continue installing this repository with
-`python -m pip install -e .` and importing:
+Install with `python -m pip install estrellio-logging-lib`, or use
+`python -m pip install -e .` for local development, then import:
 
 ```python
 from estrellio_logging_lib import init_logger
@@ -73,8 +73,8 @@ from estrellio_logging_lib import init_logger
 The existing exports `init_logger`, `normalize_level`, and `DEFAULT_FORMAT`
 remain available. The package additionally supports options such as
 `log_to_file`, `stream`, and `formatter`; those options are not part of the
-smaller standalone example. Existing consumers do not need to migrate as
-part of this repository reorganization. For new projects, prefer the example.
+smaller standalone example. Choose the installed package for shared updates
+and the copyable example for configuration maintained within your application.
 
 ## C/C++ libraries
 

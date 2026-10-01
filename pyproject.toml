@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,11 +8,17 @@ version = "0.1.0"
 description = "Small logging helpers for CLI-style Python tools."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
   { name = "shade" }
 ]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/jiangnanqw12/estrellio_logging_lib"
+Repository = "https://github.com/jiangnanqw12/estrellio_logging_lib"
+Issues = "https://github.com/jiangnanqw12/estrellio_logging_lib/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
@@ -22,6 +28,8 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["estrellio_logging_lib", "estrellio_logging_lib.*"]
+namespaces = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
